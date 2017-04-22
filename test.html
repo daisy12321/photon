@@ -12,10 +12,11 @@
 	<script src="https://cdn.jsdelivr.net/particle-api-js/5/particle.min.js"></script>
 	<script>
     var x;
+    var myinter;
 
     function changecolors() {
         x = 1;
-        setInterval(change, 500);
+        myinter = setInterval(change, 500);
     }
 
     function change() {
@@ -28,10 +29,13 @@
         }
         document.body.style.background = color;
     }
+    function clearcolors(){
+      clearInterval(myinter);
+      document.body.style.background = "white";
+    }
 
 		var particle = new Particle();
-    var token = "ac1d78a7bee54480949ac098747567aca6fa31ba";
-    var devicesPr = particle.listDevices({ auth: token });
+    var token = 'ac1d78a7bee54480949ac098747567aca6fa31ba';
 
 		// particle.login({ username: 'candydaisy12321@gmail.com', password: 'daisy12321' })
 		// 	.then(function(result) {
@@ -44,21 +48,18 @@
 		// 		console.error(err);
 		// 	});
 
-      devicesPr.then(
-        function(devices){
-          console.log('Devices: ', devices);
-        },
-        function(err) {
-          console.log('List devices call failed: ', err);
-        }
-      );
-
       particle.getEventStream({ deviceId: '33003a000347353138383138', name: 'pushButtonState', auth: token })
       .then(function(stream) {
         stream.on('event', function(data) {
           console.log("Event: " + data);
-          document.getElementById("demo2").innerHTML = data
-          changecolors();
+          document.getElementById("demo2").innerHTML = data.data;
+
+          if (data.data == "Pressed") {
+            changecolors();
+          } else {
+            clearcolors();
+          }
+
         });
       });
 
