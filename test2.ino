@@ -23,12 +23,12 @@ void loop()
     /*Spark.publish("pushButtonState","Pressed",60,PRIVATE);*/
     Particle.publish("pushButtonState","Pressed", 60);
     // Add a delay to prevent getting tons of emails from IFTTT
-    delay(5000);
+    delay(1000);
   }
   else
   {
     digitalWrite(led, LOW);   // Turn OFF the LED
-    /*Particle.publish("pushButtonState","Unpressed", 60);*/
+    Particle.publish("pushButtonState","Unpressed", 60);
 
   }
 

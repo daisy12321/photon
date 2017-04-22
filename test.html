@@ -13,10 +13,13 @@
 	<script>
     var x;
     var myinter;
+    var flashing=false;
 
     function changecolors() {
         x = 1;
-        myinter = setInterval(change, 500);
+        if (myinter != 200) {
+          myinter = setInterval(change, 500);
+        }
     }
 
     function change() {
@@ -29,13 +32,15 @@
         }
         document.body.style.background = color;
     }
-    function clearcolors(){
+
+    function clearcolors() {
       clearInterval(myinter);
       document.body.style.background = "white";
     }
 
 		var particle = new Particle();
     var token = 'ac1d78a7bee54480949ac098747567aca6fa31ba';
+    var audio = new Audio('car_alarm.mp3');
 
 		// particle.login({ username: 'candydaisy12321@gmail.com', password: 'daisy12321' })
 		// 	.then(function(result) {
@@ -51,13 +56,21 @@
       particle.getEventStream({ deviceId: '33003a000347353138383138', name: 'pushButtonState', auth: token })
       .then(function(stream) {
         stream.on('event', function(data) {
-          console.log("Event: " + data);
+          console.log("Event: " + data.data);
           document.getElementById("demo2").innerHTML = data.data;
 
           if (data.data == "Pressed") {
-            changecolors();
+
+            if (!flashing) {
+              changecolors();
+              audio.play();
+
+            }
+            flashing = true;
+
           } else {
             clearcolors();
+            audio.pause();
           }
 
         });
