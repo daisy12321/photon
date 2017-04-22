@@ -1,0 +1,67 @@
+<!-- <form action="https://api.particle.io/v1/devices/33003a000347353138383138/led?access_token=ac1d78a7bee54480949ac098747567aca6fa31ba" method="POST"> -->
+<!-- https://api.particle.io/v1/devices/33003a000347353138383138/analogvalue?access_token=ac1d78a7bee54480949ac098747567aca6fa31ba -->
+<html>
+<head>
+	<title>Particle Login Example</title>
+</head>
+<body>
+
+  <p id="demo1"></p>
+  <p id="demo2"></p>
+
+	<script src="https://cdn.jsdelivr.net/particle-api-js/5/particle.min.js"></script>
+	<script>
+    var x;
+
+    function changecolors() {
+        x = 1;
+        setInterval(change, 500);
+    }
+
+    function change() {
+        if (x === 1) {
+            color = "white";
+            x = 2;
+        } else {
+            color = "black";
+            x = 1;
+        }
+        document.body.style.background = color;
+    }
+
+		var particle = new Particle();
+    var token = "ac1d78a7bee54480949ac098747567aca6fa31ba";
+    var devicesPr = particle.listDevices({ auth: token });
+
+		// particle.login({ username: 'candydaisy12321@gmail.com', password: 'daisy12321' })
+		// 	.then(function(result) {
+    //     // token  = result.body.access_token;
+		// 		// console.log('Your access token', token );
+    //     // document.getElementById("demo1").innerHTML = token;
+    //
+    //
+		// 	}, function(err) {
+		// 		console.error(err);
+		// 	});
+
+      devicesPr.then(
+        function(devices){
+          console.log('Devices: ', devices);
+        },
+        function(err) {
+          console.log('List devices call failed: ', err);
+        }
+      );
+
+      particle.getEventStream({ deviceId: '33003a000347353138383138', name: 'pushButtonState', auth: token })
+      .then(function(stream) {
+        stream.on('event', function(data) {
+          console.log("Event: " + data);
+          document.getElementById("demo2").innerHTML = data
+          changecolors();
+        });
+      });
+
+	</script>
+</body>
+</html>
